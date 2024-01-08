@@ -3,6 +3,9 @@ package com.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,12 +25,12 @@ public class ProductController {
 	@Autowired
 	ProductDao productDao;
 	@PostMapping("/product")
-	public ProductBean addProduct(@RequestBody ProductBean productBean) {
+	public ResponseEntity<?> addProduct(@RequestBody ProductBean productBean) {
 				
 		productDao.addProduct(productBean);
 //		System.out.println(productBean.getName());
 //		System.out.println(productBean.getCty());
-		return productBean;
+		return ResponseEntity.status(HttpStatus.CREATED).body(productBean);
 	}
 	
 	@GetMapping("/product")
@@ -38,14 +41,22 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product/{id}") 	
-	public ProductBean getProduct(@PathVariable("id") int id){
+	public ResponseEntity<?> getProduct(@PathVariable("id") int id){
 		ProductBean productbyid = productDao.getProductBeanById(id);
-		return productbyid;
+		if(productbyid == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product Not Found...");
+		}
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Product Deleted Successfully...");
+		
 	}
 	
 	@DeleteMapping("/product/{id}")
-	public String deleteProductById(@PathVariable("id") int id) {
-		int deletebyid = productDao.deleteProductByAll(id);
-		return "...Product Deleted...";
+	public ResponseEntity<?> deleteProductById(@PathVariable("id") int id) {
+		Integer deletebyid = productDao.deleteProductByAll(id);
+		if(deletebyid == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product Not Found...");
+		}
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Product Deleted Successfully...");
+		
 	}
 }

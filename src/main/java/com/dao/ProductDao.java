@@ -30,7 +30,13 @@ public class ProductDao {
 	}
 
 	public int deleteProductByAll(int id) {
-		return stmt.update("delete from product where id = ?", id);
+		try {
+			return stmt.update("delete from product where id = ?", id);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return (Integer) null;
 	}
 
 
