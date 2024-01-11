@@ -34,10 +34,10 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product")
-	public List<ProductBean> getAllProducts(){
+	public ResponseEntity<?> getAllProducts(){
 		 
 		List<ProductBean> list = productDao.getAllProducts();
-		return list; 
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(list); 
 	}
 	
 	@GetMapping("/product/{id}") 	
